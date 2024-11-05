@@ -26,7 +26,7 @@ def upload_csv(request):
         if data is not None and additional_info:
             # Initialize the LLM here (ensure that the Google API key is configured)
             import os
-            os.environ["GOOGLE_API_KEY"] = "AIzaSyBfdmbokKIHmi5cdJP8_97RgRsSshphclY"
+            os.environ["GOOGLE_API_KEY"] = "<GOOGLE-GEMINI-API-KEY>"
             llm = GoogleGenerativeAI(model="gemini-pro")
 
             # Create a Pandas DataFrame agent
