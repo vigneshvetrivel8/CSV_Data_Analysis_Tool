@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyApp Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .upload-btn:hover {
+            background-color: #45a049;
+        }
+
+        #file-name-display {
+            margin-top: 10px;
+            display: inline-block;
+            font-style: italic;
+            color: #666;
+        }
+        
+        #csv_file {
+            display: none;
+        }
+
+        label {
+            display: block;
+            margin: 20px 0 10px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #text_input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #eaf4ea;
+            border-left: 5px solid #4CAF50;
+            color: #333;
+            text-align: left;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        function triggerFileInput() {
+            document.getElementById('csv_file').click();
+        }
+
+        function updateFileName(input) {
+            var fileName = input.files[0] ? input.files[0].name : "No file chosen";
+            document.getElementById('file-name-display').innerText = fileName;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Analyze Your CSV</h1>
+        <p>Please upload your CSV file to proceed:</p>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Custom button to trigger file upload -->
+            <button type="button" class="upload-btn" onclick="triggerFileInput()">Upload CSV File</button>
+            
+            <!-- Display selected file name -->
+            <span id="file-name-display">
+                {% if file_name %}
+                    {{ file_name }}
+                {% else %}
+                    No file chosen
+                {% endif %}
+            </span>
+
+            <!-- Hidden file input -->
+            <input type="file" name="csv_file" id="csv_file" accept=".csv" onchange="updateFileName(this)">
+
+            <!-- Query input -->
+            <label for="text_input">Enter your query:</label>
+            <input type="text" name="text_input" id="text_input" placeholder="Enter your query here..." required>
+
+            <!-- Submit button -->
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+
+        {% if additional_info %}
+            <div class="output">
+                <h2>Output:</h2>
+                <p>{{ additional_info }}</p>
+            </div>
+        {% endif %}
+
+        {% if data and not data.empty %}
+            <div class="output">
+                <h2>Current CSV Loaded:</h2>
+                <p>File uploaded successfully! You can now ask queries.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
